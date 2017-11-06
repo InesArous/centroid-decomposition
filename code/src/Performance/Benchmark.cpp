@@ -16,8 +16,6 @@ namespace Benchmark {
 
 int64_t benchmarkCDtime(Matrix *mx)
 {
-    std::ofstream output;
-    output.open("./Results/batch/output.txt");
     CentroidDecomposition cd = CentroidDecomposition(mx);
 
     std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
@@ -25,12 +23,6 @@ int64_t benchmarkCDtime(Matrix *mx)
     cd.performDecomposition(true);
 
     std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-    
-    Matrix &L = *cd.getLoad();
-    Matrix &R = *cd.getRel();
-    output << "LOAD =" << std::endl << L.toString() << std::endl;
-    output << "REL =" << std::endl << R.toString() << std::endl;
-    output.close();
     
     return std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
 

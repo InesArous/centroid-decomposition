@@ -81,10 +81,11 @@ void writePrecision(std::string out, uint64_t n, uint64_t m, double precision)
 
 void writeMatrix(std::string out, std::string matrix, std::string &matrixContent)
 {
-    out.append(".");
-    out.append(matrix);
+    //out.append(".");
+    //out.append(matrix);
     ofstream out_file;
     out_file.open (out, ios::out | ios::app);
+    
 
     out_file << "MATRIX " << matrix <<": " << endl << matrixContent << endl;
 

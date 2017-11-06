@@ -7,16 +7,16 @@ def my_range(start, end, step):
         yield start
         start += step
 
-CDexec = './bin/batchCD/CentroidDecomposition'
+CDexec = './src/CentroidDecomposition'
 
 def launchCD(n, m, mx_val, out_val):
     procCD = subprocess.Popen(CDexec + \
-        ' -test t -n '+ str(n) + ' -m ' + str(m) + \
-        ' -data M -in ./Data/' + mx_val + '.txt -out ./Results/batch/' + out_val + '.txt', \
+        ' -test o -n '+ str(n) + ' -m ' + str(m) + \
+        ' -data M -in ../files/' + mx_val + '.txt -out ../files/' + out_val + '.txt', \
         shell=True)
     retval = procCD.wait()
 
 ### scenario
-launchCD(6, 3, 'sample', 'cd_runtime')
+launchCD(6, 3, 'sample', 'cd_output')
 
 
