@@ -1,6 +1,6 @@
 
 - Clone this repo
-     git clone git@github.com:eXascaleInfolab/InCD_bench.git
+     git clone git@github.com:InesArous/centroid-decomposition.git
 - Navigate to your freshly cloned local git repo
      cd InCD_bench
     
