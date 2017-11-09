@@ -2,17 +2,19 @@ DROP FUNCTION centroid_decomposition;
 CREATE FUNCTION centroid_decomposition(array STRING) RETURNS STRING LANGUAGE PYTHON {
     import sys
     import numpy as np
-    import importlib
+    import centroid_decomposition
 
-    working_directory = '/Users/rkoopmanschap/projects/centroid-decomposition/'
-    sys.path.append(working_directory + "code")
-    import batch_cd
-    importlib.reload(batch_cd)
+    sys.path.append('/Users/rkoopmanschap/projects/cd_python/')
 
-    matrix_l, matrix_r = batch_cd.centroid_decomposition_wrapper(array, working_directory)
+    matrix = []
+    for row in array:
+        matrix.append([float(element) for element in row.split(' ')])
+
+    matrix = np.matrix(matrix)
+
+    matrix_l, matrix_r = centroid_decomposition.centroid_decomposition(matrix)
     return str(matrix_l) + str(matrix_r)
 };
-
 
 DROP TABLE time_series;
 CREATE TABLE time_series(array STRING);
