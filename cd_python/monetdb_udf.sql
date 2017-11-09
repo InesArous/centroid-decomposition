@@ -4,7 +4,7 @@ CREATE FUNCTION centroid_decomposition(array STRING) RETURNS STRING LANGUAGE PYT
     import numpy as np
     import centroid_decomposition
 
-    sys.path.append('/Users/rkoopmanschap/projects/cd_python/')
+    sys.path.append('/Users/rkoopmanschap/projects/centroid-decomposition/cd_python')
 
     matrix = []
     for row in array:
