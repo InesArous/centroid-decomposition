@@ -1,7 +1,7 @@
 CREATE OR REPLACE FUNCTION set_working_directory(working_directory STRING) RETURNS BOOLEAN LANGUAGE PYTHON {
     import os
 
-    return os.chdir(working_directory)
+    os.chdir(working_directory)
 
     return True
 };
@@ -87,7 +87,7 @@ SELECT set_working_directory('/Users/rkoopmanschap/projects/centroid-decompositi
 # example 1: time_series centroid decomposition
 DROP TABLE time_series;
 CREATE TABLE time_series(x1 float, x2 float, x3 float, x4 float);
-COPY INTO time_series FROM '/Users/rkoopmanschap/projects/centroid-decomposition/cd_monetdb/climate1.csv' USING DELIMITERS ',','\n';
+COPY INTO time_series FROM '/Users/rkoopmanschap/projects/centroid-decomposition/cd_monetdb/climate.csv' USING DELIMITERS ',','\n';
 SELECT call_dynamic_udf('monetdb_centroid_decomposition.py', 'time_series', 'x1, x2, x3, x4');
 
 # example 2: Using views
