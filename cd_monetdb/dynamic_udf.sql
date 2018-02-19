@@ -1,5 +1,18 @@
-DROP FUNCTION call_dynamic_udf;
-CREATE FUNCTION call_dynamic_udf(file STRING, table_name STRING, columns STRING) RETURNS STRING LANGUAGE PYTHON {
+CREATE OR REPLACE FUNCTION set_working_directory(working_directory STRING) RETURNS BOOLEAN LANGUAGE PYTHON {
+    import os
+
+    return os.chdir(working_directory)
+
+    return True
+};
+
+CREATE OR REPLACE FUNCTION get_working_directory() RETURNS STRING LANGUAGE PYTHON {
+    import os
+
+    return os.getcwd()
+};
+
+CREATE OR REPLACE FUNCTION call_dynamic_udf(file STRING, table_name STRING, columns STRING) RETURNS STRING LANGUAGE PYTHON {
     import numpy as np
 
     # convert params to string    
@@ -29,7 +42,7 @@ from collections import OrderedDict
 parameters = OrderedDict()
 original_column_names = original_column_names.split(',')
 for i in range(number_of_columns):
-    exec('parameters[original_column_names[i]] = c' + str(i))
+    exec('parameters[original_column_names[i]] = c' + str(i)) in locals()
 
 """
     with open(file, "r") as myfile:
@@ -37,7 +50,7 @@ for i in range(number_of_columns):
     function_code = data
 
     # create the new UDF
-    create_query = 'CREATE FUNCTION auto_generated_udf(number_of_columns INTEGER, original_column_names STRING, ' + column_parameters + ') RETURNS ' + 'STRING' + ' LANGUAGE PYTHON {\n' + default_function_code + function_code + '\n};'
+    create_query = 'CREATE FUNCTION auto_generated_udf(number_of_columns INTEGER, original_column_names STRING, ' + column_parameters + ') RETURNS ' + 'STRING' + ' LANGUAGE PYTHON {\n' + default_function_code + function_code + '\nreturn result};'
     print("create_query = ", create_query)
     auto_generated_udf_already_exists = _conn.execute('SELECT COUNT(*) AS c1 FROM sys.functions WHERE name=\'auto_generated_udf\' LIMIT 1;')['c1'][0] == 1
     if(auto_generated_udf_already_exists):
@@ -69,6 +82,7 @@ for i in range(number_of_columns):
 
 
 # run the set_working_directory script first
+SELECT set_working_directory('/Users/rkoopmanschap/projects/centroid-decomposition/cd_monetdb');
 
 # example 1: time_series centroid decomposition
 DROP TABLE time_series;
@@ -76,11 +90,10 @@ CREATE TABLE time_series(x1 float, x2 float, x3 float, x4 float);
 COPY INTO time_series FROM '/Users/rkoopmanschap/projects/centroid-decomposition/cd_monetdb/climate1.csv' USING DELIMITERS ',','\n';
 SELECT call_dynamic_udf('monetdb_centroid_decomposition.py', 'time_series', 'x1, x2, x3, x4');
 
-
 # example 2: Using views
+DROP VIEW time_series5;
 DROP TABLE time_series3;
 DROP TABLE time_series4;
-DROP VIEW time_series5;
 CREATE TABLE time_series3 (id INTEGER, x1 FLOAT, x2 FLOAT);
 CREATE TABLE time_series4 (id INTEGER, x3 FLOAT, x4 FLOAT);
 INSERT INTO time_series3 VALUES (1, 0.2, 0.5), (2, 0.7, 0.1);
