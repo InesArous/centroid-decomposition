@@ -15,5 +15,5 @@ CREATE FUNCTION get_working_directory() RETURNS STRING LANGUAGE PYTHON {
 };
 
 # Example queries
-SELECT set_working_directory('/Users/rkoopmanschap/projects/centroid-decomposition2');
+SELECT set_working_directory('/Users/rkoopmanschap/projects/centroid-decomposition/cd_monetdb');
 SELECT get_working_directory();

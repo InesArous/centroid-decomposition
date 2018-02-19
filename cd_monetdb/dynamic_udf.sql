@@ -25,7 +25,8 @@ CREATE FUNCTION call_dynamic_udf(file STRING, table_name STRING, columns STRING)
 
     # get function code
     default_function_code = """
-parameters = {}
+from collections import OrderedDict
+parameters = OrderedDict()
 original_column_names = original_column_names.split(',')
 for i in range(number_of_columns):
     exec('parameters[original_column_names[i]] = c' + str(i))
@@ -67,11 +68,13 @@ for i in range(number_of_columns):
 };
 
 
+# run the set_working_directory script first
+
 # example 1: time_series centroid decomposition
 DROP TABLE time_series;
 CREATE TABLE time_series(x1 float, x2 float, x3 float, x4 float);
-COPY 100 RECORDS INTO time_series FROM '/Users/rkoopmanschap/projects/centroid-decomposition/cd_monetdb/climate.csv' USING DELIMITERS ',','\n';
-SELECT call_dynamic_udf('monetdb_centroid_decomposition.py', 'time_series2', 'x1, x2, x3, x4');
+COPY INTO time_series FROM '/Users/rkoopmanschap/projects/centroid-decomposition/cd_monetdb/climate1.csv' USING DELIMITERS ',','\n';
+SELECT call_dynamic_udf('monetdb_centroid_decomposition.py', 'time_series', 'x1, x2, x3, x4');
 
 
 # example 2: Using views
